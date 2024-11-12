@@ -1,5 +1,8 @@
 # SIMS "Security Incident Management System"
 
+## Quickstart
+``` init.cmd ```
+
 ## Usernames
 - admin/admin
 - user/user
@@ -13,13 +16,14 @@
 
 ### SIMSAPI
 - redisdb: Hostname of redis database
+- postgresdb: Connectionstring of PostgresDB (e.g. Host=simsdb1;Username=postgresadmin;Password=1234;Database=db1)
 
 ### SIMS
 - postgresdb: Connectionstring of PostgresDB (e.g. Host=simsdb1;Username=postgresadmin;Password=1234;Database=db1)
 
 ## Docker builds
 ```
-docker build -t simsdb databasePostgres\. 
+docker build -t simsdb databasePostgres\.
 docker build -t simsapi --label "latest" SIMSAPI\.
 docker build -t sims --label "latest" SIMS\.
 ```
