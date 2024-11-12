@@ -2,9 +2,8 @@
 
 namespace SIMS
 {
-    public class Incident
+    public class Incident : DBBase
     {
-        private string postgresDB = Environment.GetEnvironmentVariable("postgresdb") ?? "Host=localhost;Username=postgresadmin;Password=1234;Database=db1";
         public int Incident_id { get; set; }
         public bool Resolved { get; set; }
         public string Reporter { get; set; } = "";
@@ -17,7 +16,7 @@ namespace SIMS
 
         public Incident(int id)
         {
-            using (NpgsqlConnection db = new NpgsqlConnection(postgresDB))
+            using (NpgsqlConnection db = new NpgsqlConnection(base.ConnectionString))
             {
                 db.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand($"select * from sims.incident where Incident_id = {id}", db))
@@ -39,10 +38,10 @@ namespace SIMS
             }
         }
 
-        public List<Incident>GetList()
+        public List<Incident> GetList()
         {
             List<Incident> result = new List<Incident>();
-            using (NpgsqlConnection db = new NpgsqlConnection(postgresDB))
+            using (NpgsqlConnection db = new NpgsqlConnection(base.ConnectionString))
             {
                 db.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand($"select * from sims.incident where resolved = false order by Reported_at desc", db))
@@ -71,7 +70,7 @@ namespace SIMS
 
         public void Save()
         {
-            using (NpgsqlConnection db = new NpgsqlConnection(postgresDB))
+            using (NpgsqlConnection db = new NpgsqlConnection(base.ConnectionString))
             {
                 db.Open();
                 string sql = "";
