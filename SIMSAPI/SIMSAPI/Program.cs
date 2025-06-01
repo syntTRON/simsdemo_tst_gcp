@@ -1,5 +1,7 @@
 
 using Npgsql;
+using System;
+using System.Threading;
 
 namespace SIMSAPI
 {
@@ -34,7 +36,7 @@ namespace SIMSAPI
 
             app.Run();
         }
-        private static void TestInit()
+        private static async void TestInit()
         {
             string TestSql = "SELECT EXISTS (SELECT FROM information_schema.tables t WHERE table_schema = 'sims' and table_name = 'simsuser');";
             bool NeedCreation = false;
