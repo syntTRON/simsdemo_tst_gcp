@@ -11,8 +11,8 @@ namespace SIMS
         public string Description { get; set; } = "";
         public string Title { get; set; } = "";
         public int Incident_type { get; set; } = 1;
-        public string Instance_Location { get; set; } = Environment.GetEnvironmentVariable("default_instlocation") ?? "Specify note default unset";
-        public string Instance_Name { get; set; }
+        public string Instance_Location { get; set; } = Environment.GetEnvironmentVariable("default_instlocation") ?? "Specify. Note default unset";
+        public string Instance_Name { get; set; } = "No Instance";
 
         public Incident() { }
 
