@@ -25,8 +25,10 @@ services:
         ports:
             - 8888:8080
         environment:
-            - redisdb=redisdb1
-            - postgresdb=Host=simsdb1;Username=postgresadmin;Password=1234;Database=db1
+#            - redisdb=redisdb1
+            - redisdb=
+#            - postgresdb=Host=simsdb1;Username=postgresadmin;Password=1234;Database=db1
+            - postgresdb=
 #        links:
 #            - redisdb1
         image: simsapi:latest
@@ -36,7 +38,10 @@ services:
             - 8080:8080
         environment:
             - api=http://simsapi1:8080
-            - postgresdb=Host=simsdb1;Username=postgresadmin;Password=1234;Database=db1
+#            - postgresdb=Host=
+            - postgresdb=Host=
+            - default_instlocation=
+            - escalate_endpoint=
         links:
 #            - simsdb1
             - simsapi1

@@ -5,6 +5,7 @@
 @attribute [StreamRendering]
 @inject NavigationManager NavManager
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using System.Text.Json
 @inject ProtectedSessionStorage ProtectedSessionStore
 
 <PageTitle>Edit Incident</PageTitle>
@@ -50,6 +51,7 @@
 
 
 @code {
+
     private int id = 0;
 
     Incident incident = new Incident();
@@ -85,6 +87,34 @@
 
     private void cmdEscalate_Clicked()
     {
-        escalateMessage = "Sorry, not implemented";
+        //escalateMessage = "Sorry, not implemented";
+        string EscalationEndpoint = Environment.GetEnvironmentVariable("escalate_endpoint") ?? "notset";
+
+        Escalation esca = new Escalation();
+        esca.instance = incident.Instance_Name;
+        esca.zone = incident.Instance_Location;
+        esca.message = incident.Description;
+
+        if (EscalationEndpoint == "notset")
+        {
+            HttpClient client = new HttpClient();
+            try
+            {
+                //client.BaseAddress = new Uri(EscalationEndpoint);
+                var json = JsonSerializer.Serialize(esca);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync(EscalationEndpoint, content).Result;
+                if (response.IsSuccessStatusCode) { Console.WriteLine("Instance Stopped"); }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("An exeption ocured");
+            }
+        }
+
+        incident.Save();
+        NavManager.NavigateTo("incidents");
     }
 }

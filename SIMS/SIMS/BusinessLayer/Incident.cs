@@ -11,6 +11,8 @@ namespace SIMS
         public string Description { get; set; } = "";
         public string Title { get; set; } = "";
         public int Incident_type { get; set; } = 1;
+        public string Instance_Location { get; set; } = Environment.GetEnvironmentVariable("default_instlocation") ?? "Specify note default unset";
+        public string Instance_Name { get; set; }
 
         public Incident() { }
 
@@ -31,6 +33,8 @@ namespace SIMS
                             Title = (string)reader["Title"];
                             Reported_at = Convert.ToDateTime(reader["Reported_at"]);
                             Incident_type = Convert.ToInt32(reader["Incident_type_id"]);
+                            Instance_Location = (string)reader["instance_location"];
+                            Instance_Name = (string)reader["instance_name"];
                         }
                     }
                 }
@@ -57,7 +61,9 @@ namespace SIMS
                                 Description = (string)reader["Description"],
                                 Title = (string)reader["Title"],
                                 Reported_at = Convert.ToDateTime(reader["Reported_at"]),
-                                Incident_type = Convert.ToInt32(reader["Incident_type_id"])
+                                Incident_type = Convert.ToInt32(reader["Incident_type_id"]),
+                                Instance_Location = (string)reader["instance_location"],
+                                Instance_Name = (string)reader["instance_name"]
                             };
                             result.Add(item);
                         }
@@ -76,12 +82,12 @@ namespace SIMS
                 string sql = "";
                 if (Incident_id == 0)
                 {
-                    sql += $"INSERT INTO sims.incident(resolved, reporter, reported_at, description, title, incident_type_id) ";
-                    sql += $"VALUES (@resolved, @reporter, @reported_at, @description, @title, @incident_type_id);";
+                    sql += $"INSERT INTO sims.incident(resolved, reporter, reported_at, description, title, incident_type_id, instance_location, instance_name) ";
+                    sql += $"VALUES (@resolved, @reporter, @reported_at, @description, @title, @incident_type_id, @instance_location, @instance_name);";
                 }
                 else
                 {
-                    sql += $"update sims.incident set resolved = @resolved, reporter = @reporter, reported_at = @reported_at, ";
+                    sql += $"update sims.incident set resolved = @resolved, reporter = @reporter, reported_at = @reported_at, instance_location = @instance_location, instance_name = @instance_name,";
                     sql += $"description = @description, title = @title, incident_type_id = @incident_type_id where Incident_id = {Incident_id};";
                 }
                 using (NpgsqlCommand cmd = new NpgsqlCommand(sql, db))
@@ -92,6 +98,8 @@ namespace SIMS
                     cmd.Parameters.AddWithValue("title", Title);
                     cmd.Parameters.AddWithValue("resolved", Resolved);
                     cmd.Parameters.AddWithValue("incident_type_id", Incident_type);
+                    cmd.Parameters.AddWithValue("instance_name", Instance_Name);
+                    cmd.Parameters.AddWithValue("instance_location", Instance_Location);
                     cmd.ExecuteNonQuery();
                 }
                 db.Close();
