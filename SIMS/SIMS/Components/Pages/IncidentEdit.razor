@@ -103,7 +103,7 @@
         esca.zone = incident.Instance_Location;
         esca.message = incident.Description;
 
-        if (EscalationEndpoint == "notset")
+        if (EscalationEndpoint != "notset")
         {
             HttpClient client = new HttpClient();
             try
